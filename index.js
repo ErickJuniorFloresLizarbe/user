@@ -60,22 +60,41 @@ app.put('/usuarios/:id', async (req, res) => {
   }
 });
 
-// Ruta para eliminar un usuario
+// Ruta para eliminar un usuario (cambiar estado a "I")
 app.delete('/usuarios/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query(
-      'DELETE FROM usuarios WHERE id = $1 RETURNING *',
-      [id]
+      'UPDATE usuarios SET estado = $1 WHERE id = $2 RETURNING *',
+      ['I', id]  // Cambiar estado a "I" para indicar que está inactivo
     );
     if (result.rows.length > 0) {
-      res.json({ message: 'Usuario eliminado correctamente' });
+      res.json({ message: 'Usuario inactivado correctamente' });
     } else {
       res.status(404).json({ error: 'Usuario no encontrado' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al eliminar usuario' });
+    res.status(500).json({ error: 'Error al inactivar usuario' });
+  }
+});
+
+// Ruta para restaurar un usuario (cambiar estado a "A")
+app.put('/usuarios/restaurar/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      'UPDATE usuarios SET estado = $1 WHERE id = $2 RETURNING *',
+      ['A', id]  // Cambiar estado a "A" para restaurar el usuario
+    );
+    if (result.rows.length > 0) {
+      res.json({ message: 'Usuario restaurado correctamente' });
+    } else {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al restaurar usuario' });
   }
 });
 
