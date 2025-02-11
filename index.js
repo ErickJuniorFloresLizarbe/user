@@ -27,11 +27,11 @@ app.get('/usuarios', async (req, res) => {
 
 // Ruta para crear un nuevo usuario
 app.post('/usuarios', async (req, res) => {
-  const { nombres, correo, celular, numero_doc, contrasena, estado } = req.body;
+  const { nombres, correo, celular, numero_doc, contraseña, estado } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO usuarios (nombres, correo, celular, numero_doc, contrasena, estado) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [nombres, correo, celular, numero_doc, contrasena, estado]
+      'INSERT INTO usuarios (nombres, correo, celular, numero_doc, contraseña, estado) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [nombres, correo, celular, numero_doc, contraseña, estado]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -43,11 +43,11 @@ app.post('/usuarios', async (req, res) => {
 // Ruta para actualizar un usuario
 app.put('/usuarios/:id', async (req, res) => {
   const { id } = req.params;
-  const { nombres, correo, celular, numero_doc, contrasena, estado } = req.body;
+  const { nombres, correo, celular, numero_doc, contraseña, estado } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE usuarios SET nombres = $1, correo = $2, celular = $3, numero_doc = $4, contrasena = $5, estado = $6 WHERE id = $7 RETURNING *',
-      [nombres, correo, celular, numero_doc, contrasena, estado, id]
+      'UPDATE usuarios SET nombres = $1, correo = $2, celular = $3, numero_doc = $4, contraseña = $5, estado = $6 WHERE id = $7 RETURNING *',
+      [nombres, correo, celular, numero_doc, contraseña, estado, id]
     );
     if (result.rows.length > 0) {
       res.json(result.rows[0]);
